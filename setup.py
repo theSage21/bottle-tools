@@ -1,7 +1,7 @@
 from setuptools import setup
 
 
-with open('README.md', 'r') as fl:
+with open("README.md", "r") as fl:
     long_desc = fl.read()
 
 
@@ -9,8 +9,8 @@ setup(
     name="bottle_tools",
     author="Arjoonn Sharma",
     long_description=long_desc,
-    long_description_content_type='text/markdown',
-    version="0.0",
+    long_description_content_type="text/markdown",
+    version="0.1",
     packages=["bottle_tools"],
     install_requires=["bottle"],
     python_requires=">=3.6",

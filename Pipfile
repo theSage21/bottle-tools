@@ -9,6 +9,8 @@ pip = "==18.0"
 
 [dev-packages]
 sphinx = "*"
+black = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.6"

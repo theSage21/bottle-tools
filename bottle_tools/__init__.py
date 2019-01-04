@@ -61,7 +61,7 @@ def fill_args(function=None, *, json_only=True):
         kwargs = dict()
         for name in spec.args:
             if name not in given and name not in defaults:
-                return abort(400, f"Please provide `{name}`")
+                return abort(400, "Please provide `{name}`".format(name=name))
             val = given.get(name)
             if val is not None:
                 kwargs[name] = val
