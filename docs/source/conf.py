@@ -14,6 +14,7 @@
 #
 import os
 import sys
+import bottle_tools
 
 sys.path.insert(0, os.path.abspath("../.."))
 
@@ -25,9 +26,9 @@ copyright = "2019, Arjoonn Sharma"
 author = "Arjoonn Sharma"
 
 # The short X.Y version
-version = ""
+version = bottle_tools.__version__
 # The full version, including alpha/beta/rc tags
-release = ""
+release = bottle_tools.__version__
 
 
 # -- General configuration ---------------------------------------------------
