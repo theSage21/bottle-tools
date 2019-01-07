@@ -30,11 +30,14 @@ def __make_cors_fn__(rule, routes, allow_credentials, origin):
 
 def add_cors(app, allow_credentials=True, origin=None):
     """
-    Automatically adds CORS routes to an app instance. This function must be called after ALL
-    routes have been registered to the app. This does not add OPTIONS to those
-    routes which already have an OPTIONS method registered.
+    Automatically adds CORS routes to an app instance.
+    This function must be called after ALL routes have been registered to the app.
+    This does not add OPTIONS to those routes which already have an OPTIONS method registered.
 
     .. code:: python
+
+        # add your routes however you want
+
         app = add_cors(app)
     """
     # collect methods and other info
