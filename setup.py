@@ -10,7 +10,7 @@ setup(
     author="Arjoonn Sharma",
     long_description=long_desc,
     long_description_content_type="text/markdown",
-    version="0.2",
+    version="0.3",
     packages=["bottle_tools"],
     install_requires=["bottle"],
     python_requires=">=3.6",

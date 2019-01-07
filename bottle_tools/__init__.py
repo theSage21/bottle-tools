@@ -1,5 +1,53 @@
 import inspect
+from collections import defaultdict
 from functools import wraps, partial
+
+
+def __cors_dict__(allow_credentials, origin, methods):
+    cors_string = "Origin, Accept , Content-Type"
+    cors_string += ", X-Requested-With, X-CSRF-Token"
+    CORS_HEADERS = {
+        "Access-Control-Allow-Methods": methods,
+        "Access-Control-Allow-Headers": cors_string,
+        "Access-Control-Allow-Origin": origin,
+    }
+    if allow_credentials is not None:
+        value = "true" if allow_credentials else "false"
+        CORS_HEADERS.update({"Access-Control-Allow-Credentials": value})
+    return CORS_HEADERS
+
+
+def __make_cors_fn__(rule, routes, allow_credentials, origin):
+    methods = ", ".join([r.method for r in routes])
+
+    def fn():
+        origin = bottle.request.headers.get("Origin") if origin is None else origin
+        headers = __cors_dict__(allow_credentials, origin, methods)
+        bottle.response.update(headers)
+
+    return fn
+
+
+def add_cors(app, allow_credentials=True, origin=None):
+    """
+    Automatically adds CORS routes to an app instance. This function must be called after ALL
+    routes have been registered to the app. This does not add OPTIONS to those
+    routes which already have an OPTIONS method registered.
+
+    .. code:: python
+        app = add_cors(app)
+    """
+    # collect methods and other info
+    grp_by_rule = defaultdict(list)
+    for route in app.routes:
+        grp_by_rule[route.rule].append(route)
+    # add the new routes
+    cors_functions = []
+    for rule, routes in grp_by_rule.items():
+        if not any([r.method == "OPTIONS" for r in routes]):
+            fn = __make_cors_fn__(rule, routes, origin)
+            app.route(rule, method=["OPTIONS"])(fn)
+    return app
 
 
 def fill_args(function=None, *, json_only=True):
