@@ -13,3 +13,6 @@ Welcome to bottle-tools's documentation!
 .. automodule:: bottle_tools
     :members:
     :undoc-members:
+
+
+If you have a feature in mind, do let me know. Open a request on the `Issue Tracker <https://github.com/theSage21/bottle-tools/issues/new>`_.

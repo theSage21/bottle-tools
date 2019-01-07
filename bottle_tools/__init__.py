@@ -30,15 +30,18 @@ def __make_cors_fn__(rule, routes, allow_credentials, origin):
 
 def add_cors(app, allow_credentials=True, origin=None):
     """
-    Automatically adds CORS routes to an app instance.
-    This function must be called after ALL routes have been registered to the app.
-    This does not add OPTIONS to those routes which already have an OPTIONS method registered.
+
+    Automatically adds CORS routes to an app instance. This function must be
+    called after ALL routes have been registered to the app. This does not add
+    OPTIONS to those routes which already have an OPTIONS method registered.
 
     .. code:: python
 
         # add your routes however you want
-
+        # in the END, add the next line
         app = add_cors(app)
+        # then continue to run your app or whatever you wanted to do
+        app.run()
     """
     # collect methods and other info
     grp_by_rule = defaultdict(list)
@@ -79,12 +82,27 @@ def fill_args(function=None, *, json_only=True):
         @fill_args
         def search_for_string(query):
             # Do something with query
+
+    If you provide simple type annotations the decorator will ensure those types. For example
+
+    .. code:: python
+
+        @app.post('/calculate')
+        @fill_args
+        def fancy_calculation(a: int, b: float):
+            return {'result': a + b}
+
+    This bit of code raises an error if `a` is not supplied as an integer or if
+    `b` is not given as a float. Complex types like those described in the
+    `Typing module <https://docs.python.org/3/library/typing.html>`_ in Python
+    docs are not yet supported. If you would like them to be added, please open
+    up an issue.
     """
     if function is None:
         return partial(fill_args, json_only=json_only)
-    spec = inspect.getargspec(function)
+    spec = inspect.getfullargspec(function)
     # figure out which args have defaults supplied
-    args, defaults = spec.args, spec.defaults
+    args, defaults, anno = spec.args, spec.defaults, spec.annotations
     defaults = (
         set()
         if defaults is None
@@ -114,8 +132,14 @@ def fill_args(function=None, *, json_only=True):
             if name not in given and name not in defaults:
                 return abort(400, "Please provide `{name}`".format(name=name))
             val = given.get(name)
-            if val is not None:
-                kwargs[name] = val
+            if name in anno and not isinstance(given.get(name), anno[name]):
+                return abort(
+                    400,
+                    "Please provide `{name}: {type}`".format(
+                        name=name, type=anno[name]
+                    ),
+                )
+            kwargs[name] = val
         return function(**kwargs)
 
     return new_fn
