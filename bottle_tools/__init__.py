@@ -1,8 +1,9 @@
+import bottle
 import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.32"
+__version__ = "0.34"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -53,7 +54,7 @@ def add_cors(app, allow_credentials=True, origin=None):
     cors_functions = []
     for rule, routes in grp_by_rule.items():
         if not any([r.method == "OPTIONS" for r in routes]):
-            fn = __make_cors_fn__(rule, routes, origin)
+            fn = __make_cors_fn__(rule, routes, allow_credentials, origin)
             app.route(rule, method=["OPTIONS"])(fn)
     return app
 
