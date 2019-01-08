@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.35"
+__version__ = "0.37"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -134,15 +134,16 @@ def fill_args(function=None, *, json_only=False):
         for name in spec.args:
             if name not in given and name not in defaults:
                 return abort(400, "Please provide `{name}`".format(name=name))
-            val = given.get(name)
-            if name in anno and not isinstance(given.get(name), anno[name]):
-                return abort(
-                    400,
-                    "Please provide `{name}: {type}`".format(
-                        name=name, type=anno[name]
-                    ),
-                )
-            kwargs[name] = val
+            if name in given:
+                val = given[name]
+                if name in anno and not isinstance(val, anno[name]):
+                    return abort(
+                        400,
+                        "Please provide `{name}: {type}`".format(
+                            name=name, type=anno[name]
+                        ),
+                    )
+                kwargs[name] = val
         return function(**kwargs)
 
     return new_fn
