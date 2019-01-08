@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.382"
+__version__ = "0.39"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -37,7 +37,7 @@ def add_cors(app, allow_credentials=True, origin=None):
     """
 
     Automatically adds CORS routes to an app instance. This function must be
-    called after ALL routes have been registered to the app. This does not add
+    called after *ALL* routes have been registered to the app. This does not add
     OPTIONS to those routes which already have an OPTIONS method registered.
 
     .. code:: python
@@ -149,3 +149,51 @@ def fill_args(function=None, *, json_only=False):
         return function(**kwargs)
 
     return new_fn
+
+
+def prefix_docs(app):
+    """
+    Automatically prefixes docstrings of functions with the method and route in
+    the decorator. Use this just like `add_cors` but *BEFORE* you register any
+    routes. For example
+
+    .. code:: python
+
+        app = bottle.Bottle()
+        app = prefix_docs(app)
+
+        @app.get('/some')
+        def my_fn():
+            "This function returns some"
+            return 'some'
+
+    When this code is used in Sphinx or via `help(my_fn)`, the docstring has
+    been modified to include the information that the function is accessible
+    via a GET call on the route `/some`. This information is added to the
+    beginning of the docstring already supplied.
+    """
+
+    def _prefix_docs(method):
+        @wraps(method)  # method liket post/get/delete etc
+        def new_api_registration(route, *a, **kw):
+            # method is called with a route and returns a decorator
+            fn_decorator = method(route, *a, **kw)
+
+            # we build a new decorator which will add the docstrings
+            @wraps(fn_decorator)
+            def new_decorator(*args, **kwargs):
+                fn = fn_decorator(*args, **kwargs)
+                doc = f"**{method.__name__.upper()}** *{route}*"
+                doc += "" if fn.__doc__ is None else f"\n\n{fn.__doc__}"
+                fn.__doc__ = doc
+                return fn
+
+            return new_decorator
+
+        return new_api_registration
+
+    app.post = _prefix_docs(app.post)
+    app.get = _prefix_docs(app.get)
+    app.delete = _prefix_docs(app.delete)
+    app.put = _prefix_docs(app.put)
+    return app
