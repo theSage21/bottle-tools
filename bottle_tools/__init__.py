@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.37"
+__version__ = "0.38"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -119,25 +119,25 @@ def fill_args(function=None, *, json_only=False):
             given = bottle.request.json
             if given is None:
                 if json_only:
-                    return abort(415, 'please use "application/json"')
+                    return bottle.abort(415, 'please use "application/json"')
                 given = bottle.request.forms
         elif method == "GET":
             given = bottle.request.query
         else:  # Everyone else uses forms
             given = bottle.request.forms
         if given is None:
-            return abort(
+            return bottle.abort(
                 400,
                 "Cannot detect arguments. GET: query, POST: json/form body, Others: form body",
             )
         kwargs = dict()
         for name in spec.args:
             if name not in given and name not in defaults:
-                return abort(400, "Please provide `{name}`".format(name=name))
+                return bottle.abort(400, "Please provide `{name}`".format(name=name))
             if name in given:
                 val = given[name]
                 if name in anno and not isinstance(val, anno[name]):
-                    return abort(
+                    return bottle.abort(
                         400,
                         "Please provide `{name}: {type}`".format(
                             name=name, type=anno[name]
