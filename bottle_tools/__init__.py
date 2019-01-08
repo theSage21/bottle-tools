@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.34"
+__version__ = "0.35"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -59,7 +59,7 @@ def add_cors(app, allow_credentials=True, origin=None):
     return app
 
 
-def fill_args(function=None, *, json_only=True):
+def fill_args(function=None, *, json_only=False):
     """
     Use to populate function arguments from json/query string/post data provided in API call.
 
