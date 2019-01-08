@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.38"
+__version__ = "0.382"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -24,9 +24,11 @@ def __make_cors_fn__(rule, routes, allow_credentials, origin):
     methods = ", ".join([r.method for r in routes])
 
     def fn():
-        origin = bottle.request.headers.get("Origin") if origin is None else origin
-        headers = __cors_dict__(allow_credentials, origin, methods)
-        bottle.response.update(headers)
+        final_origin = (
+            bottle.request.headers.get("Origin") if origin is None else origin
+        )
+        headers = __cors_dict__(allow_credentials, final_origin, methods)
+        bottle.response.headers.update(headers)
 
     return fn
 
