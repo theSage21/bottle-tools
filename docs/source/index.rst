@@ -7,12 +7,13 @@ Welcome to bottle-tools's documentation!
 ========================================
 
 
-`Bottle <https://bottlepy.org>`_ is a wonderfully small framework for writing web based interfaces. It's size however means that if you mean to use it for a lot of things, some things become boring quickly. This project aims to provide techniques / code which will make those tedious tasks easier.
+`Bottle <https://bottlepy.org>`_ is a wonderfully small framework for writing
+web based interfaces. It's size however means that if you mean to use it for a
+lot of things, some things become boring quickly. This project aims to provide
+techniques / code which will make those tedious tasks easier.
 
+If you have a feature in mind, do let me know. Open a request on the `Issue Tracker <https://github.com/theSage21/bottle-tools/issues/new>`_.
 
 .. automodule:: bottle_tools
     :members:
     :undoc-members:
-
-
-If you have a feature in mind, do let me know. Open a request on the `Issue Tracker <https://github.com/theSage21/bottle-tools/issues/new>`_.

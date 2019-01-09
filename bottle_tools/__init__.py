@@ -37,7 +37,7 @@ def add_cors(app, allow_credentials=True, origin=None):
     """
 
     Automatically adds CORS routes to an app instance. This function must be
-    called after *ALL* routes have been registered to the app. This does not add
+    called after **ALL** routes have been registered to the app. This does not add
     OPTIONS to those routes which already have an OPTIONS method registered.
 
     .. code:: python
@@ -154,7 +154,7 @@ def fill_args(function=None, *, json_only=False):
 def prefix_docs(app):
     """
     Automatically prefixes docstrings of functions with the method and route in
-    the decorator. Use this just like `add_cors` but *BEFORE* you register any
+    the decorator. Use this just like `add_cors` but **BEFORE** you register any
     routes. For example
 
     .. code:: python
@@ -167,10 +167,34 @@ def prefix_docs(app):
             "This function returns some"
             return 'some'
 
-    When this code is used in Sphinx or via `help(my_fn)`, the docstring has
-    been modified to include the information that the function is accessible
-    via a GET call on the route `/some`. This information is added to the
-    beginning of the docstring already supplied.
+    When this code is used in Sphinx or via `help(my_fn)`, the docstring being processed is the following
+
+    ::
+
+        **GET** */some*
+
+        This function returns some
+
+    This information changes as per the code. So if you register more than one
+    url to the same function, it will reflect that in the code.
+
+    .. code:: python
+
+        @app.get('/search')
+        @app.get('/🔎')
+        def my_search():
+            "Perform some fancy search"
+            return 'found it!'
+
+    The docstring looks like:
+
+    ::
+
+        **GET** */some*
+        **GET** */🔎*
+
+        Perform some fancy search
+
     """
 
     def _prefix_docs(method):
