@@ -1,6 +1,6 @@
 import bottle
 import pytest
-from bottle_tools import add_cors, fill_args
+from bottle_tools import add_cors, fill_args, prefix_docs
 
 
 @pytest.fixture
@@ -33,3 +33,15 @@ def test_cors_adds_only_one_rule_for_multiple_methods(app):
     n_new_routes = len(app.routes)
     assert n_routes < n_new_routes
     assert n_new_routes - n_routes == 1
+
+
+def test_prefix_docs_alters_docs(app):
+    app = prefix_docs(app)
+
+    @app.get("/some")
+    def fn():
+        "my docstring"
+
+    assert "/some" in fn.__doc__
+    assert "GET" in fn.__doc__
+    assert "my docstring" in fn.__doc__
