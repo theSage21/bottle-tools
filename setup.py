@@ -1,12 +1,8 @@
-import os
 from setuptools import setup
 
 __version__ = "0.40"
 
-# we want the path relative to this script since when sphinx will read this
-# file to access version number we don't want problems
-readme = os.path.join(os.path.dirname(os.path.abspath(__file__)), "README.md")
-with open(readme, "r") as fl:
+with open("README.md", "r") as fl:
     long_desc = fl.read()
 
 

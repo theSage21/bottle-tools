@@ -15,20 +15,18 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../.."))
-from setup import __version__
-
 
 # -- Project information -----------------------------------------------------
 
 project = "bottle-tools"
 copyright = "2019, Arjoonn Sharma"
 author = "Arjoonn Sharma"
+version = "0.40"
 
 # The short X.Y version
-version = __version__
+version = version
 # The full version, including alpha/beta/rc tags
-release = __version__
+release = version
 
 
 # -- General configuration ---------------------------------------------------
