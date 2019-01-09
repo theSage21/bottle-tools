@@ -16,7 +16,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath("../.."))
-import bottle_tools
+from bottle_tools.version import __version__
 
 
 # -- Project information -----------------------------------------------------
@@ -26,9 +26,9 @@ copyright = "2019, Arjoonn Sharma"
 author = "Arjoonn Sharma"
 
 # The short X.Y version
-version = bottle_tools.__version__
+version = __version__
 # The full version, including alpha/beta/rc tags
-release = bottle_tools.__version__
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------

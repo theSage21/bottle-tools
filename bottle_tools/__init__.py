@@ -2,8 +2,7 @@ import bottle
 import inspect
 from collections import defaultdict
 from functools import wraps, partial
-
-__version__ = "0.40"
+from .version import __version__
 
 
 def __cors_dict__(allow_credentials, origin, methods):

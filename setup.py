@@ -1,5 +1,5 @@
 from setuptools import setup
-from bottle_tools import __version__
+from bottle_tools.version import __version__
 
 
 with open("README.md", "r") as fl:
