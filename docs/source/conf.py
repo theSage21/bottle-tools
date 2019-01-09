@@ -14,9 +14,9 @@
 #
 import os
 import sys
-import bottle_tools
 
 sys.path.insert(0, os.path.abspath("../.."))
+import bottle_tools
 
 
 # -- Project information -----------------------------------------------------
