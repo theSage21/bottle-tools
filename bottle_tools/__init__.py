@@ -2,7 +2,6 @@ import bottle
 import inspect
 from collections import defaultdict
 from functools import wraps, partial
-from .version import __version__
 
 
 def __cors_dict__(allow_credentials, origin, methods):

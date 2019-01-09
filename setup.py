@@ -1,10 +1,9 @@
 from setuptools import setup
-from bottle_tools.version import __version__
-
 
 with open("README.md", "r") as fl:
     long_desc = fl.read()
 
+__version__ = "0.40"
 
 setup(
     name="bottle_tools",
