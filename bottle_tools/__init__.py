@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.39"
+__version__ = "0.40"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -183,8 +183,8 @@ def prefix_docs(app):
             @wraps(fn_decorator)
             def new_decorator(*args, **kwargs):
                 fn = fn_decorator(*args, **kwargs)
-                doc = f"**{method.__name__.upper()}** *{route}*"
-                doc += "" if fn.__doc__ is None else f"\n\n{fn.__doc__}"
+                doc = "**{}** *{}*".format(method.__name__.upper(), route)
+                doc += "" if fn.__doc__ is None else "\n\n{}".format(fn.__doc__)
                 fn.__doc__ = doc
                 return fn
 
