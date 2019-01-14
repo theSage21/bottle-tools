@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.40"
+__version__ = "0.41"
 
 
 def __cors_dict__(allow_credentials, origin, methods):

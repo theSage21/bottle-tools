@@ -13,6 +13,11 @@ black = "*"
 pre-commit = "*"
 requests = "*"
 pytest = "*"
+bottle-tools = {editable = true, path = "."}
+sphinx-argparse = "*"
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true
