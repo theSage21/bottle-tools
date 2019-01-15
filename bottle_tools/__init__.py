@@ -3,17 +3,18 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "0.41"
+__version__ = "0.42"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
     cors_string = "Origin, Accept , Content-Type"
     cors_string += ", X-Requested-With, X-CSRF-Token"
     CORS_HEADERS = {
-        "Access-Control-Allow-Methods": methods,
         "Access-Control-Allow-Headers": cors_string,
         "Access-Control-Allow-Origin": origin,
     }
+    if methods is not None:
+        CORS_HEADERS["Access-Control-Allow-Methods"] = methods
     if allow_credentials is not None:
         value = "true" if allow_credentials else "false"
         CORS_HEADERS.update({"Access-Control-Allow-Credentials": value})
@@ -58,6 +59,15 @@ def add_cors(app, allow_credentials=True, origin=None):
         if not any([r.method == "OPTIONS" for r in routes]):
             fn = __make_cors_fn__(rule, routes, allow_credentials, origin)
             app.route(rule, method=["OPTIONS"])(fn)
+
+    @app.hook("after_request")
+    def add_cors_headers():
+        final_origin = (
+            bottle.request.headers.get("Origin") if origin is None else origin
+        )
+        headers = __cors_dict__(allow_credentials, final_origin, None)
+        bottle.response.headers.update(headers)
+
     return app
 
 
