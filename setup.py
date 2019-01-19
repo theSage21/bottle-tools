@@ -1,6 +1,6 @@
 from setuptools import setup
 
-__version__ = "2019.1.16"
+__version__ = "2019.1.19"
 
 with open("README.md", "r") as fl:
     long_desc = fl.read()

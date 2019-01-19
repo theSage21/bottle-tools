@@ -21,6 +21,14 @@ Functions
     :members:
     :undoc-members:
 
+
+Plugins
+-------
+
+.. automodule:: bottle_tools.plugins
+    :members:
+    :undoc-members:
+
 CLI Tools
 ---------
 
