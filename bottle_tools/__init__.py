@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.1.19"
+__version__ = "2019.2.1"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -133,7 +133,7 @@ def fill_args(function=None, *, json_only=False):
                 if json_only:
                     return bottle.abort(415, 'please use "application/json"')
                 given = bottle.request.forms
-        elif method == "GET":
+        elif method == "GET" or method == "HEAD":
             given = bottle.request.query
         else:  # Everyone else uses forms
             given = bottle.request.forms
