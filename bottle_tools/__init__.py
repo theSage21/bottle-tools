@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.2.3"
+__version__ = "2019.2.4"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -93,9 +93,10 @@ def fill_args(function=None, *, json_only=False):
         def change_user_data(name, age):
             # Do something with name and age
 
-        @app.get('/search')
+        @app.get('/search/<folder>')
         @fill_args
-        def search_for_string(query):
+        def search_for_string(folder, query):
+            # folder is from the URL and query can be passed as params
             # Do something with query
 
     If you provide simple type annotations the decorator will ensure those types. For example
@@ -144,7 +145,7 @@ def fill_args(function=None, *, json_only=False):
             )
         kwargs = dict()
         for name in spec.args:
-            if name not in given and name not in defaults:
+            if name not in given and name not in defaults and name not in kw:
                 return bottle.abort(400, "Please provide `{name}`".format(name=name))
             if name in given:
                 val = given[name]
