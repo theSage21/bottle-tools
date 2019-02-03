@@ -3,7 +3,7 @@ import inspect
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.2.1"
+__version__ = "2019.2.3"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -125,7 +125,7 @@ def fill_args(function=None, *, json_only=False):
     )
 
     @wraps(function)
-    def new_fn():
+    def new_fn(*a, **kw):
         method = bottle.request.method  # Current request being processed
         if method == "POST":
             given = bottle.request.json
@@ -156,7 +156,8 @@ def fill_args(function=None, *, json_only=False):
                         ),
                     )
                 kwargs[name] = val
-        return function(**kwargs)
+        kw.update(kwargs)
+        return function(*a, **kw)
 
     return new_fn
 
