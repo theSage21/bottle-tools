@@ -1,9 +1,10 @@
 import bottle
 import inspect
+import logging
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.2.4"
+__version__ = "2019.2.12"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -137,7 +138,9 @@ def fill_args(function=None, *, json_only=False):
         elif method == "GET" or method == "HEAD":
             given = bottle.request.query
         else:  # Everyone else uses forms
-            given = bottle.request.forms
+            given = bottle.request.json
+            given = dict() if given is None else dict(given)
+            given = {**given, **dict(bottle.request.forms)}
         if given is None:
             return bottle.abort(
                 400,
