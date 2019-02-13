@@ -129,17 +129,16 @@ def fill_args(function=None, *, json_only=False):
     @wraps(function)
     def new_fn(*a, **kw):
         method = bottle.request.method  # Current request being processed
-        given = {}
-        source_list = ["query", "forms", "json"]
-        if json_only and (
-            (not hasattr(bottle.request, "json")) or bottle.request.json is None
-        ):
-            return bottle.abort(415, 'please use "application/json"')
-        for source in [
-            getattr(bottle.request, s) if hasattr(bottle.request, s) else {}
-            for s in source_list
-        ]:
-            given.update({} if source is None else source)
+        if json_only:
+            if (not hasattr(bottle.request, "json")) or bottle.request.json is None:
+                return bottle.abort(415, 'please use "application/json"')
+            else:
+                given = bottle.request.json
+        else:
+            R = bottle.request
+            given = R.forms if hasattr(R, "forms") and R.forms is not None else {}
+            given.update(R.json if hasattr(R, "json") and R.json is not None else {})
+            given.update(R.query if hasattr(R, "query") and R.query is not None else {})
         kwargs = dict()
         for name in spec.args:
             if name not in given and name not in defaults and name not in kw:
