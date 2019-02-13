@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.2.12"
+__version__ = "2019.2.13"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -138,9 +138,10 @@ def fill_args(function=None, *, json_only=False):
         elif method == "GET" or method == "HEAD":
             given = bottle.request.query
         else:  # Everyone else uses forms
-            given = bottle.request.json
-            given = dict() if given is None else dict(given)
-            given = {**given, **dict(bottle.request.forms)}
+            json_given = bottle.request.json
+            json_given = dict() if json_giveniven is None else dict(json_given)
+            bottle.request.forms.update(json_given)
+            given = bottle.request.forms
         if given is None:
             return bottle.abort(
                 400,
