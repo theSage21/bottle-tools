@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.2.14"
+__version__ = "2019.4.17"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -72,7 +72,7 @@ def add_cors(app, allow_credentials=True, origin=None):
     return app
 
 
-def fill_args(function=None, *, json_only=False):
+def fill_args(function=None, *, json_only=False, coerce_types=False):
     """
     Use to populate function arguments from json/query string/post data provided in API call.
 
@@ -116,7 +116,7 @@ def fill_args(function=None, *, json_only=False):
     up an issue.
     """
     if function is None:
-        return partial(fill_args, json_only=json_only)
+        return partial(fill_args, json_only=json_only, coerce_types=True)
     spec = inspect.getfullargspec(function)
     # figure out which args have defaults supplied
     args, defaults, anno = spec.args, spec.defaults, spec.annotations
@@ -145,13 +145,18 @@ def fill_args(function=None, *, json_only=False):
                 return bottle.abort(400, "Please provide `{name}`".format(name=name))
             if name in given:
                 val = given[name]
-                if name in anno and not isinstance(val, anno[name]):
+                if (
+                    name in anno
+                    and not isinstance(val, anno[name])
+                    and not coerce_types
+                ):
                     return bottle.abort(
                         400,
                         "Please provide `{name}: {type}`".format(
                             name=name, type=anno[name]
                         ),
                     )
+                val = anno[name](val) if coerce_types else val
                 kwargs[name] = val
         kw.update(kwargs)
         return function(*a, **kw)
