@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.4.17"
+__version__ = "2019.4.17rc1"
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -156,7 +156,7 @@ def fill_args(function=None, *, json_only=False, coerce_types=False):
                             name=name, type=anno[name]
                         ),
                     )
-                val = anno[name](val) if coerce_types else val
+                val = anno.get(name, lambda x: x)(val) if coerce_types else val
                 kwargs[name] = val
         kw.update(kwargs)
         return function(*a, **kw)
