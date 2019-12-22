@@ -4,7 +4,8 @@ import logging
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.4.17rc1"
+__version__ = "2019.12.22rc1"
+common_kwargs = {"request": bottle.request}
 
 
 def __cors_dict__(allow_credentials, origin, methods):
@@ -114,6 +115,28 @@ def fill_args(function=None, *, json_only=False, coerce_types=False):
     `Typing module <https://docs.python.org/3/library/typing.html>`_ in Python
     docs are not yet supported. If you would like them to be added, please open
     up an issue.
+
+    Some arguments which need to be present throughout your application may be
+    provided via the `common_kwargs` dictionary. For example, you might need your
+    ORM's table throughout your routes.
+
+    .. code:: python
+
+        import bottle_tools as bt
+
+        bt.common_kwargs.update({"UserTable": UserTable})
+
+        @app.post('/login')
+        @bt.fill_args
+        def login_function(uname: str, pwd: str, UserTable):
+            user = UserTable.get_or_none(uname=uname)
+            if user is None:
+                raise bt.abort(404, 'Not found')
+            if not user.check_password(pwd):
+                raise bt.abort(404, 'Not found')
+            user.new_session()
+            ...
+
     """
     if function is None:
         return partial(fill_args, json_only=json_only, coerce_types=True)
@@ -141,9 +164,16 @@ def fill_args(function=None, *, json_only=False, coerce_types=False):
             given.update(R.query if hasattr(R, "query") and R.query is not None else {})
         kwargs = dict()
         for name in spec.args:
-            if name not in given and name not in defaults and name not in kw:
+            if (
+                name not in given
+                and name not in defaults
+                and name not in kw
+                and name not in common_kwargs
+            ):
                 return bottle.abort(400, "Please provide `{name}`".format(name=name))
-            if name in given:
+            if name in common_kwargs:
+                kwargs[name] = common_kwargs[name]
+            elif name in given:
                 val = given[name]
                 if (
                     name in anno

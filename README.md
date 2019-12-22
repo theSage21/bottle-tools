@@ -7,9 +7,17 @@ A set of tools to make things easier to work with when using Bottle.
 
 Autofill APIs with typed information
 
-```
+```python
+
+import bottle_tools as bt
+
+bt.common_kwargs.update({"User": UserTable})
+
 @app.post('/calculate')
-@fill_args(coerce_types=True)
-def fancy_calculation(a: int, b: float):
-    return {'result': a + b}
+@bt.fill_args(coerce_types=True)
+def login(usrname: str, pwd: str, User):
+    user = User.get_or_404(usrname=usrname)
+    if not user.password_is_correct(pwd):
+        raise HttpNotFound()
+    return 'ok'
 ```
