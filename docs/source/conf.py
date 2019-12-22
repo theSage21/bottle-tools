@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 project = "bottle-tools"
 copyright = "2019, Arjoonn Sharma"
 author = "Arjoonn Sharma"
-version = "2019.12.22.rc2"
+version = "2019.12.22"
 
 # The short X.Y version
 version = version

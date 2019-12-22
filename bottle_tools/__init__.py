@@ -4,7 +4,7 @@ import logging
 from collections import defaultdict
 from functools import wraps, partial
 
-__version__ = "2019.12.22rc2"
+__version__ = "2019.12.22"
 common_kwargs = {"request": bottle.request, "response": bottle.response}
 
 
